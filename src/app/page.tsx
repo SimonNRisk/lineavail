@@ -27,11 +27,14 @@ export default function Home() {
 
     // Filter locations based on user input
     if (value.length > 0) {
-      const matchedNames = Object.keys(locationAliases).filter((mainName) =>
+      const matchedNames = Object.keys(locationAliases)
+      .filter((mainName) =>
         locationAliases[mainName].some(alias => alias.toLowerCase().includes(value))
-      );
-      
+      )
+      .slice(0, 5);
+      console.log("Matched Names:", matchedNames); // Debugging statement
 
+      
       setFiltered([...new Set(matchedNames)]);
     } else {
       setFiltered([]);
@@ -55,7 +58,12 @@ export default function Home() {
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600 text-gray-900 relative z-10"
           value={search}
           onChange={handleChange}
-          onFocus={() => setFiltered(Object.keys(locationAliases))} // Show all main names
+          onFocus={() => {
+            if (!search) {
+              setFiltered(Object.keys(locationAliases).slice(0,5)); // Show all if search is empty
+            }
+          }}
+          
         />
         {/* Autocomplete Dropdown */}
         {filtered.length > 0 && (
