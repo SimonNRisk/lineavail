@@ -28,7 +28,7 @@ export default function Home() {
     // Filter locations based on user input
     if (value.length > 0) {
       const matchedNames = Object.entries(locationAliases)
-        .filter(([_N_E_STYLE_LOAD, aliases]) =>
+        .filter(([_, aliases]) =>
           aliases.some(alias => alias.toLowerCase().includes(value))
         )
         .map(([mainName]) => mainName);
