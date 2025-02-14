@@ -21,6 +21,10 @@ export default function Home() {
   const [filtered, setFiltered] = useState<string[]>([]);
   const router = useRouter();
 
+  const handleBlur = () => {
+    setFiltered([]); //filtered dropdown cleared when input is not focused
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setSearch(value);
@@ -63,7 +67,7 @@ export default function Home() {
               setFiltered(Object.keys(locationAliases).slice(0,5)); // Show all if search is empty
             }
           }}
-          
+          onBlur = {handleBlur}
         />
         {/* Autocomplete Dropdown */}
         {filtered.length > 0 && (
