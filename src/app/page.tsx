@@ -21,8 +21,13 @@ export default function Home() {
   const [filtered, setFiltered] = useState<string[]>([]);
   const router = useRouter();
 
-  const handleBlur = () => {
-    setFiltered([]); //filtered dropdown cleared when input is not focused
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Check if the click is outside the dropdown to prevent blur from closing the dropdown immediately
+    setTimeout(() => {
+      if (!e.currentTarget.contains(document.activeElement)) {
+        setFiltered([]);
+      }
+    }, 150);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
