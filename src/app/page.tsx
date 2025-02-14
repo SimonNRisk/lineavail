@@ -27,11 +27,10 @@ export default function Home() {
 
     // Filter locations based on user input
     if (value.length > 0) {
-      const matchedNames = Object.entries(locationAliases)
-        .filter(([_, aliases]) =>
-          aliases.some(alias => alias.toLowerCase().includes(value))
-        )
-        .map(([mainName]) => mainName);
+      const matchedNames = Object.keys(locationAliases).filter((mainName) =>
+        locationAliases[mainName].some(alias => alias.toLowerCase().includes(value))
+      );
+      
 
       setFiltered([...new Set(matchedNames)]);
     } else {
