@@ -1,33 +1,32 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-
-const locationAliases: { [key: string]: string[] } = {
-  "Cogro": ["Cogro", "Common Grounds"],
-  "Trinity": ["Trin", "Trinity"],
-  "Stages Nightclub": ["Stages", "Stages Nightclub"],
-  "Brass Pub": ["Brass", "Brass Pub"],
-  "Stauffer Library": ["Stauffer", "Stauffer Library"],
-  "ARC": ["ARC", "Athletics and Recreation Centre", "Gym"],
-  "Douglas Library": ["Douglas", "Douglas Library"],
-  "Goodes Hall": ["Goodes", "Goodes Hall"],
-  "Beamish-Munro Hall": ["BMH", "Beamish-Munro Hall", "ILC", "Integrated Learning Centre"],
-  "Mitchell Hall": ["Mitchell Hall", "Mitchell", "ARC South"]
-};
-
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState<string[]>([]);
   const router = useRouter();
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Check if the click is outside the dropdown to prevent blur from closing the dropdown immediately
-    setTimeout(() => {
-      if (!e.currentTarget.contains(document.activeElement)) {
-        setFiltered([]);
-      }
-    }, 150);
+  const locationAliases: { [key: string]: string[] } = {
+    "Cogro": ["Cogro", "Common Grounds"],
+    "Trinity": ["Trin", "Trinity"],
+    "Stages Nightclub": ["Stages", "Stages Nightclub"],
+    "Brass Pub": ["Brass", "Brass Pub"],
+    "Stauffer Library": ["Stauffer", "Stauffer Library"],
+    "ARC": ["ARC", "Athletics and Recreation Centre", "Gym"],
+    "Douglas Library": ["Douglas", "Douglas Library"],
+    "Goodes Hall": ["Goodes", "Goodes Hall"],
+    "Beamish-Munro Hall": ["BMH", "Beamish-Munro Hall", "ILC", "Integrated Learning Centre"],
+    "Mitchell Hall": ["Mitchell Hall", "Mitchell", "ARC South"]
+  };
+
+  const dropdownRef = useRef<HTMLUListElement | null>(null);
+
+  const handleBlur = () => {
+    // Check if the dropdown exists and if the active element is not inside the dropdown
+    if (!dropdownRef.current?.contains(document.activeElement)) {
+      setFiltered([]);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,8 +41,6 @@ export default function Home() {
       )
       .slice(0, 5);
       console.log("Matched Names:", matchedNames); // Debugging statement
-
-      
       setFiltered([...new Set(matchedNames)]);
     } else {
       setFiltered([]);
@@ -72,15 +69,19 @@ export default function Home() {
               setFiltered(Object.keys(locationAliases).slice(0,5)); // Show all if search is empty
             }
           }}
-          onBlur = {handleBlur}
+          onBlur={handleBlur}
         />
         {/* Autocomplete Dropdown */}
         {filtered.length > 0 && (
-          <ul className="absolute w-full bg-white border border-gray-300 rounded-md shadow-md mt-1 z-20 text-black">
+          <ul
+            ref={dropdownRef}
+            className="absolute w-full bg-white border border-gray-300 rounded-md shadow-md mt-1 z-20 text-black"
+          >
             {filtered.map((loc) => (
               <li
                 key={loc}
                 className="p-2 cursor-pointer hover:bg-gray-200"
+                onMouseDown={(e) => e.preventDefault()} // Prevent blur from triggering on click
                 onClick={() => {
                   console.log("Navigating to:", `${encodeURIComponent(loc)}`);
                   router.push(`${encodeURIComponent(loc)}`);
