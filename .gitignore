@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Virtual environment directory for backend
+backend/venv/
+
+# Python cache and compiled files
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+
+# Environment variables (sensitive info) for backend
+backend/.env
