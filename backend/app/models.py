@@ -13,5 +13,4 @@ class PopularTimes(Base):
     address = Column(String, nullable=True) 
     hours = Column(JSON, nullable=True)  
     populartimes = Column(JSON, nullable=True)  
-    current_popularity = Column(Integer, nullable=True) 
     last_updated = Column(DateTime, default=datetime.datetime.utcnow)  
