@@ -50,3 +50,4 @@ backend/*$py.class
 
 # Environment variables (sensitive info) for backend
 backend/.envfrontend/node_modules
+frontend/node_modules
