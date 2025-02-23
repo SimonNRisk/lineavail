@@ -1,15 +1,16 @@
 import os
 import json
 import datetime
+import livepopulartimes
 from dotenv import load_dotenv
 from app.database import SessionLocal, init_db
 from app.models import PopularTimes
-from LivePopularTimes.livepopulartimes import get_populartimes_by_PlaceID
+from livepopulartimes import get_populartimes_by_PlaceID
 import time 
 
 init_db()
 load_dotenv()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") #add ur own google api key here
 
 def update_place_data(place_id: str):
     """
@@ -33,7 +34,6 @@ def update_place_data(place_id: str):
 
     if existing_place:
         existing_place.populartimes = populartimes_json
-        existing_place.current_popularity = data.get("current_popularity", None)
         existing_place.last_updated = datetime.datetime.utcnow()
         print(f"Data for {existing_place.name} updated in the database.")
     else:
@@ -43,7 +43,6 @@ def update_place_data(place_id: str):
             address=data["address"],
             hours=hours_json,
             populartimes=populartimes_json,
-            current_popularity=data.get("current_popularity", None),
         )
         session.add(new_place)
         print(f"Data for {new_place.name} updated.")
@@ -69,15 +68,15 @@ if __name__ == "__main__":
     update_all_places()
 
 
-# tester print
-# session = SessionLocal()
+#tester print
+session = SessionLocal()
 
-# douglas = session.query(PopularTimes).filter_by(name="Douglas Library").first()
+douglas = session.query(PopularTimes).filter_by(name="Douglas Library").first()
 
-# if douglas:
-#     print(f"{douglas.name} Popular Times:")
-#     print(douglas.populartimes) 
-# else:
-#     print("Douglas Library not found")
+if douglas:
+    print(f"{douglas.name} Popular Times:")
+    print(douglas.populartimes) 
+else:
+    print("Douglas Library not found")
 
-# session.close()
+session.close()
